@@ -61,7 +61,7 @@ public class Manager implements TransactionInterface {
 
     @Override
     public void attachMaterialToWarehouse(Material material, Warehouse warehouse) {
-        validateArguments(material,warehouse);
+        validateArguments(material, warehouse);
 
         if (warehouse.getMaterialsWithExistCapacity().containsKey(material)) {
             throw new ResourceManagementException("Material " + material.getType().getName() + " is already attached to the warehouse " + warehouse.getName());
@@ -110,6 +110,40 @@ public class Manager implements TransactionInterface {
         updateMaterialQuantity(warehouse, material, remainingQuantity);
 
         logger.info(material.getQuantity() + " " + material.getType().getName() + " removed from warehouse " + warehouse.getName() + ". ");
+    }
+
+    @Override
+    public void transfer(Player player, Warehouse from, Warehouse to, Material material) {
+        validateArguments(player, from, to, material);
+
+        final int existQuantity = from.getMaterialQuantity(material);
+        final int transferQuantity = material.getQuantity();
+
+        ensureSufficientQuantity(from, material, existQuantity, transferQuantity);
+        ensureCapacityWithinLimit(to, material, transferQuantity);
+        executeTransfer(from, to, material);
+
+        logger.info("Transfer between " + from.getName() + " and " + to.getName() + " is successfully done  done");
+    }
+
+
+    private void ensureSufficientQuantity(Warehouse from, Material material, int existQuantity, int transferQuantity) {
+        if (existQuantity < transferQuantity) {
+            logger.warning("Insufficient quantity of " + material.getType().getName() + " in warehouse " + from.getName());
+            throw new ResourceManagementException("Insufficient quantity of " + material.getType().getName() + " in warehouse " + from.getName());
+        }
+    }
+
+    private void ensureCapacityWithinLimit(Warehouse to, Material material, int transferQuantity) {
+        if (to.getMaterialQuantity(material) + transferQuantity > material.getType().getMaxCapacity()) {
+            logger.warning("Exceeds maximum capacity of " + to.getName() + " for " + material.getType().getName());
+            throw new ResourceManagementException("Exceeds maximum capacity of " + to.getName() + " for " + material.getType().getName());
+        }
+    }
+
+    private void executeTransfer(Warehouse from, Warehouse to, Material material) {
+        removeMaterial(from, material);
+        addMaterial(to, material);
     }
 
     private void ensureCapacityWithinMax(Warehouse warehouse, Material material, int newQuantity) {

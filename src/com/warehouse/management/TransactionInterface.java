@@ -24,4 +24,6 @@ public interface TransactionInterface {
     void addMaterial(Warehouse warehouse, Material material);
 
     void removeMaterial(Warehouse warehouse, Material material);
+
+    void transfer(Player player, Warehouse from, Warehouse to, Material material);
 }
