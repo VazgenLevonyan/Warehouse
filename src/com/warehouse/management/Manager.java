@@ -99,10 +99,40 @@ public class Manager implements TransactionInterface {
         logger.info(material.getQuantity() + " " + material.getType().getName() + " added to warehouse " + warehouse.getName() + ". ");
     }
 
+    @Override
+    public void removeMaterial(Warehouse warehouse, Material material) {
+        validateArguments(warehouse, material);
+
+        Integer existQuantity = warehouse.getMaterialsWithExistCapacity().get(material);
+        int remainingQuantity = existQuantity - material.getQuantity();
+
+        ensureSufficientQuantity(warehouse, material, existQuantity, remainingQuantity);
+        updateMaterialQuantity(warehouse, material, remainingQuantity);
+
+        logger.info(material.getQuantity() + " " + material.getType().getName() + " removed from warehouse " + warehouse.getName() + ". ");
+    }
+
     private void ensureCapacityWithinMax(Warehouse warehouse, Material material, int newQuantity) {
         if (newQuantity > material.getType().getMaxCapacity()) {
             throw new ResourceManagementException("Exceeds maximum capacity for " + material.getType().getName() + " in warehouse " + warehouse.getName());
         }
+    }
+
+    private void ensureSufficientQuantity(Warehouse warehouse, Material material, Integer existQuantity, int remainingQuantity) {
+        if (existQuantity == null) {
+            String errorMessage = material.getType().getName() + " not found in warehouse " + warehouse.getName();
+            logger.warning(errorMessage);
+            throw new ResourceManagementException(errorMessage);
+        }
+        if (remainingQuantity < 0) {
+            String errorMessage = "Insufficient quantity of " + material.getType().getName() + " in warehouse " + warehouse.getName();
+            logger.warning(errorMessage);
+            throw new ResourceManagementException(errorMessage);
+        }
+    }
+
+    private void updateMaterialQuantity(Warehouse warehouse, Material material, int remainingQuantity) {
+        warehouse.getMaterialsWithExistCapacity().put(material, remainingQuantity);
     }
 
     private void validateArguments(Object... objects) {
