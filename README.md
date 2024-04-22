@@ -4,6 +4,7 @@ Description
 
 Warehouse Management System is a pure Java project that allows players to manage their materials in the warehouses they own. It provides functionalities for creating players, warehouses, material types, and materials, as well as transferring materials between warehouses. The system implements the observer pattern for notification purposes and ensures proper validation and exception handling to maintain valid warehouse data.
 
+Note: This README corresponds to the version of the application located in the warehouse branch.
 
 Usage
 
