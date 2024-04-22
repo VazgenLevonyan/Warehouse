@@ -36,6 +36,19 @@ public class Manager implements TransactionInterface{
         return material;
     }
 
+    @Override
+    public void attachWarehouseToPlayer(Warehouse warehouse, Player player) {
+        validateArguments(warehouse, player);
+
+        if (Util.isWarehouseAttached(warehouse)) {
+            throw new ResourceManagementException("dal.Warehouse " + warehouse.getName() + " is already attached");
+        }
+
+        player.getWarehouseMap().put(warehouse.getName(), warehouse);
+        warehouse.setAttachedToPlayer(true);
+        logger.info("dal.Warehouse " + warehouse.getName() + " successfully attached to player " + player.getName());
+    }
+
     private void validateArguments(Object... objects) {
         Util.checkNotNull(objects);
     }

@@ -12,4 +12,6 @@ public interface TransactionInterface {
     Warehouse createWarehouse(String name);
 
     Material createMaterial(MaterialType materialType, int quantity);
+
+    void attachWarehouseToPlayer(Warehouse warehouse, Player player);
 }

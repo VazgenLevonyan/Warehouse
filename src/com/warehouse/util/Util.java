@@ -1,6 +1,7 @@
 package com.warehouse.util;
 
 import com.warehouse.exceptions.ResourceManagementException;
+import com.warehouse.resources.Warehouse;
 
 import java.util.Objects;
 
@@ -39,5 +40,9 @@ public class Util {
         for (T obj : objects) {
             Objects.requireNonNull(obj, "Object" + DEFAULT_MESSAGE);
         }
+    }
+
+    public static boolean isWarehouseAttached(Warehouse warehouse) {
+        return warehouse != null && warehouse.isAttachedToPlayer();
     }
 }
