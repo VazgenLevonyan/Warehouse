@@ -14,4 +14,6 @@ public interface TransactionInterface {
     Material createMaterial(MaterialType materialType, int quantity);
 
     void attachWarehouseToPlayer(Warehouse warehouse, Player player);
+
+    void detachWarehouseFromPlayer(Warehouse warehouse, Player player);
 }

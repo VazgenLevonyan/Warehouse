@@ -9,7 +9,7 @@ import com.warehouse.util.Util;
 
 import java.util.logging.Logger;
 
-public class Manager implements TransactionInterface{
+public class Manager implements TransactionInterface {
     private static final Logger logger = Logger.getLogger(Manager.class.getName());
 
     @Override
@@ -22,7 +22,7 @@ public class Manager implements TransactionInterface{
     @Override
     public Warehouse createWarehouse(String name) {
         final Warehouse warehouse = new Warehouse(name);
-        logger.info("dal.Warehouse " + name + " successfully created");
+        logger.info("Warehouse " + name + " successfully created");
         return warehouse;
     }
 
@@ -32,7 +32,7 @@ public class Manager implements TransactionInterface{
         if (quantity > materialType.getMaxCapacity())
             throw new ResourceManagementException("Exceeds maximum capacity for " + materialType.getName());
         final Material material = new Material(materialType, quantity);
-        logger.info("dal.Material " + material.getType().getName() + " successfully created");
+        logger.info("Material " + material.getType().getName() + " successfully created");
         return material;
     }
 
@@ -41,12 +41,22 @@ public class Manager implements TransactionInterface{
         validateArguments(warehouse, player);
 
         if (Util.isWarehouseAttached(warehouse)) {
-            throw new ResourceManagementException("dal.Warehouse " + warehouse.getName() + " is already attached");
+            throw new ResourceManagementException("Warehouse " + warehouse.getName() + " is already attached");
         }
 
         player.getWarehouseMap().put(warehouse.getName(), warehouse);
         warehouse.setAttachedToPlayer(true);
-        logger.info("dal.Warehouse " + warehouse.getName() + " successfully attached to player " + player.getName());
+        logger.info("Warehouse " + warehouse.getName() + " successfully attached to player " + player.getName());
+    }
+
+    @Override
+    public void detachWarehouseFromPlayer(Warehouse warehouse, Player player) {
+        validateArguments(warehouse, player);
+
+        if (player.getWarehouse(warehouse.getName()) == null)
+            throw new ResourceManagementException("Player " + player.getName() + " does not have warehouse " + warehouse.getName() + " in his warehouse list");
+        player.getWarehouseMap().remove(warehouse.getName());
+        logger.info("Warehouse " + warehouse.getName() + " successfully detached from player " + player.getName());
     }
 
     private void validateArguments(Object... objects) {
