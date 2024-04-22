@@ -71,6 +71,17 @@ public class Manager implements TransactionInterface {
         logger.info("Material " + material.getType().getName() + " successfully attached to warehouse " + warehouse.getName());
     }
 
+    @Override
+    public void detachMaterialFromWarehouse(Material material, Warehouse warehouse) {
+        validateArguments(material, warehouse);
+
+        if (!warehouse.getMaterialsWithExistCapacity().containsKey(material)) {
+            throw new ResourceManagementException("Material " + material.getType().getName() + " does not attached to the warehouse " + warehouse.getName());
+        }
+        warehouse.getMaterialsWithExistCapacity().remove(material);
+        logger.info("Material " + material.getType().getName() + " successfully detached from warehouse " + warehouse.getName());
+    }
+
     private void validateArguments(Object... objects) {
         Util.checkNotNull(objects);
     }

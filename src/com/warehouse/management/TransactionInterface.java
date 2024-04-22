@@ -18,4 +18,6 @@ public interface TransactionInterface {
     void detachWarehouseFromPlayer(Warehouse warehouse, Player player);
 
     void attachMaterialToWarehouse(Material material, Warehouse warehouse);
+
+    void detachMaterialFromWarehouse(Material material, Warehouse warehouse);
 }
