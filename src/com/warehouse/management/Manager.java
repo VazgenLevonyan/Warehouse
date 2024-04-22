@@ -82,6 +82,29 @@ public class Manager implements TransactionInterface {
         logger.info("Material " + material.getType().getName() + " successfully detached from warehouse " + warehouse.getName());
     }
 
+    @Override
+    public void addMaterial(Warehouse warehouse, Material material) {
+        validateArguments(warehouse, material);
+
+        if (!warehouse.getMaterialsWithExistCapacity().containsKey(material)) {
+            throw new ResourceManagementException("Material " + material.getType().getName() + " is not attached to the warehouse " + warehouse.getName());
+        }
+
+        int existQuantity = warehouse.getMaterialsWithExistCapacity().get(material);
+        final int newQuantity = existQuantity + material.getQuantity();
+
+        ensureCapacityWithinMax(warehouse, material, newQuantity);
+
+        warehouse.getMaterialsWithExistCapacity().put(material, newQuantity);
+        logger.info(material.getQuantity() + " " + material.getType().getName() + " added to warehouse " + warehouse.getName() + ". ");
+    }
+
+    private void ensureCapacityWithinMax(Warehouse warehouse, Material material, int newQuantity) {
+        if (newQuantity > material.getType().getMaxCapacity()) {
+            throw new ResourceManagementException("Exceeds maximum capacity for " + material.getType().getName() + " in warehouse " + warehouse.getName());
+        }
+    }
+
     private void validateArguments(Object... objects) {
         Util.checkNotNull(objects);
     }
