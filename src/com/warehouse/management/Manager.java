@@ -97,6 +97,7 @@ public class Manager implements TransactionInterface {
 
         warehouse.getMaterialsWithExistCapacity().put(material, newQuantity);
         logger.info(material.getQuantity() + " " + material.getType().getName() + " added to warehouse " + warehouse.getName() + ". ");
+        warehouse.notifyObservers("New material added: " + material.getType().getName());
     }
 
     @Override
@@ -110,6 +111,7 @@ public class Manager implements TransactionInterface {
         updateMaterialQuantity(warehouse, material, remainingQuantity);
 
         logger.info(material.getQuantity() + " " + material.getType().getName() + " removed from warehouse " + warehouse.getName() + ". ");
+        warehouse.notifyObservers("Material removed: " + material.getType().getName());
     }
 
     @Override

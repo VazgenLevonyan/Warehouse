@@ -1,11 +1,12 @@
 package com.warehouse.resources;
 
+import com.warehouse.observer.Observable;
 import com.warehouse.util.Util;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Warehouse {
+public class Warehouse implements Observable {
 
     public Warehouse(String name) {
         Util.validateString(name);
