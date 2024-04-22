@@ -38,7 +38,7 @@ public class Util {
     @SafeVarargs
     public static <T> void checkNotNull(T... objects) {
         for (T obj : objects) {
-            Objects.requireNonNull(obj, "Object" + DEFAULT_MESSAGE);
+            Objects.requireNonNull(obj, DEFAULT_MESSAGE);
         }
     }
 
